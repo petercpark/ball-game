@@ -37,7 +37,7 @@
       let mouseFollower;
       const objectCount = 50;
       const gravityForce = 100000; // Adjust the gravity force as needed
-      const maxSpeed = 200; // Adjust the maximum speed as needed
+      const maxSpeed = 100; // Adjust the maximum speed as needed
       let randomNumber = [];
       for (var i = 0; i < objectCount; i++) {
         randomNumber.push(Phaser.Math.FloatBetween(5, 10));
@@ -49,12 +49,16 @@
         0xfbf8cc, 0xfde4cf, 0xffcfd2, 0xf1c0e8, 0xcfbaf0, 0xa3c4f3, 0x90dbf4,
         0x8eecf5, 0x98f5e1, 0xb9fbc0,
       ];
+      let isMobileDevice;
 
       function preload() {
         this.load.image("follower", "assets/circle.png"); // Replace with your image path
       }
 
       function create() {
+        this.input.addPointer(2);
+        isMobileDevice =
+          this.sys.game.device.os.android || this.sys.game.device.os.iOS;
         cursor = this.input.mousePointer;
         mouseFollower = this.physics.add.group();
 
@@ -91,11 +95,13 @@
 
       function gravity(addForce) {
         for (var i = 0; i < objectCount; i++) {
-          const distanceX = cursor.x - mouseFollower.children.entries[i].x;
-          const distanceY = cursor.y - mouseFollower.children.entries[i].y;
+          var userX = isMobileDevice ? this.input.x : cursor.x;
+          var userY = isMobileDevice ? this.input.y : cursor.y;
+          const distanceX = userX - mouseFollower.children.entries[i].x;
+          const distanceY = userY - mouseFollower.children.entries[i].y;
           const distance = Phaser.Math.Distance.Between(
-            cursor.x,
-            cursor.y,
+            userX,
+            userY,
             mouseFollower.children.entries[i].x,
             mouseFollower.children.entries[i].y
           );
@@ -111,8 +117,8 @@
           );
           if (distance < 200) {
             mouseFollower.children.entries[i].setAcceleration(
-              distanceX,
-              distanceY
+              distanceX * addForce,
+              distanceY * addForce
             );
           }
         }
@@ -120,11 +126,13 @@
 
       function track(speed) {
         for (var i = 0; i < objectCount; i++) {
-          const distanceX = cursor.x - mouseFollower.children.entries[i].x;
-          const distanceY = cursor.y - mouseFollower.children.entries[i].y;
+          var userX = isMobileDevice ? this.input.x : cursor.x;
+          var userY = isMobileDevice ? this.input.y : cursor.y;
+          const distanceX = userX - mouseFollower.children.entries[i].x;
+          const distanceY = userY - mouseFollower.children.entries[i].y;
           const distance = Phaser.Math.Distance.Between(
-            cursor.x,
-            cursor.y,
+            userX,
+            userY,
             mouseFollower.children.entries[i].x,
             mouseFollower.children.entries[i].y
           );
