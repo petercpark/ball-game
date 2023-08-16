@@ -56,9 +56,6 @@
       }
 
       function create() {
-        this.input.addPointer(2);
-        isMobileDevice =
-          this.sys.game.device.os.android || this.sys.game.device.os.iOS;
         cursor = this.input.mousePointer;
         mouseFollower = this.physics.add.group();
 
@@ -95,8 +92,8 @@
 
       function gravity(addForce) {
         for (var i = 0; i < objectCount; i++) {
-          var userX = isMobileDevice ? this.input.x : cursor.x;
-          var userY = isMobileDevice ? this.input.y : cursor.y;
+          var userX = cursor.x;
+          var userY = cursor.y;
           const distanceX = userX - mouseFollower.children.entries[i].x;
           const distanceY = userY - mouseFollower.children.entries[i].y;
           const distance = Phaser.Math.Distance.Between(
@@ -126,8 +123,8 @@
 
       function track(speed) {
         for (var i = 0; i < objectCount; i++) {
-          var userX = isMobileDevice ? this.input.x : cursor.x;
-          var userY = isMobileDevice ? this.input.y : cursor.y;
+          var userX = cursor.x;
+          var userY = cursor.y;
           const distanceX = userX - mouseFollower.children.entries[i].x;
           const distanceY = userY - mouseFollower.children.entries[i].y;
           const distance = Phaser.Math.Distance.Between(
